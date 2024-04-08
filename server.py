@@ -27,6 +27,8 @@ def handle_client(connection, address):
 
             print(f"[{address}] {msg}")
 
+            connection.send(f"{msg}".encode((format)))
+
     connection.close()
 
 def start():

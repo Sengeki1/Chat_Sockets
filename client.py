@@ -28,4 +28,11 @@ def send():
         CLIENT.send(send_length)
         CLIENT.send(message)
 
+        show_message(msg)
+
+
+def show_message(msg):
+    if msg != CLIENT.recv(2048).decode(format):
+        print(CLIENT.recv(2048).decode(format))
+
 send()
