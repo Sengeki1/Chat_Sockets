@@ -32,6 +32,8 @@ def handle_client(connection, address):
                     if client_conn != connection:
                         client_conn.send(f"{msg}".encode(FORMAT))
 
+            connection.send(f"{msg}".encode((format)))
+
     connection.close()
     del clients[connection]
 
