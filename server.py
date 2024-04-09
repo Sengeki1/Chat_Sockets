@@ -23,14 +23,14 @@ def handle_client(connection, address):
             msg_length = int(msg_length) # get the integer size of bytes of the message
             msg = connection.recv(msg_length).decode(FORMAT)
 
-            if msg == "!DISCONNECT":
+            if msg == "Client Disconnected":
                 connected = False
-            else:
-                print(f"[{address}] {msg}")
 
-                for client_conn in clients:
-                    if client_conn != connection:
-                        client_conn.send(f"{msg}".encode(FORMAT))
+            print(f"[{address}] {msg}")
+
+            for client_conn in clients:
+                if client_conn != connection:
+                    client_conn.send(f"{msg}".encode(FORMAT))
 
     connection.close()
     del clients[connection]

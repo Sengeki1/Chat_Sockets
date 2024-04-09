@@ -26,8 +26,10 @@ def send():
 
         if msg == "!DISCONNECT":
             connected = False
+            message = "Client Disconnected".encode(FORMAT)
+        else:
+            message = msg.encode(FORMAT) # encode the string into bytes to be sent to the sockets
 
-        message = msg.encode(FORMAT) # encode the string into bytes to be sent to the sockets
         msg_length = len(message)
         send_length = str(msg_length).encode(FORMAT)
         send_length += b' ' * (header - len(send_length))
