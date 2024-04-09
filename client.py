@@ -4,7 +4,7 @@ import threading
 header = 64
 port = 5050
 FORMAT = 'utf-8'
-disconnect_message = '!DISCONNECT'
+
 server = socket.gethostbyname(socket.gethostname())
 address = (server, port)
 
@@ -38,7 +38,8 @@ def send():
 def receive_message(sock):
     while True:
         message = sock.recv(1024).decode()
-        if not message: break
+        if not message:
+            break
         print(f"Received: {message}")
 
 main()
