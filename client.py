@@ -27,8 +27,6 @@ def send():
     previous_threshold_value = 0
     msg = ''
 
-    print("To Disconnect Please Type !DISCONNECT")
-
     while connected:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -87,7 +85,10 @@ def send():
         for message in received_message:
             lines = message.split('\n')
             for line in lines:
-                text_surface = base_font.render(line, True, (0, 0, 0))
+                if line == "Message was Sent!":
+                    text_surface = base_font.render(line, True, (255, 0, 0))
+                else:
+                    text_surface = base_font.render(line, True, (0, 0, 0))
                 new_received_surface.append(text_surface)
 
         new_received_surface = new_received_surface[-12:] ## Ensure that the list contains at most 12 elements
