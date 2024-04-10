@@ -13,6 +13,7 @@ base_font = pygame.font.Font(None, 32)
 clock = pygame.time.Clock()
 
 interface = Interface(screen)
+received_message = []
 
 server = socket.gethostbyname(socket.gethostname())
 address = (server, port)
@@ -23,6 +24,7 @@ CLIENT.connect(address)
 def send():
     connected = True
     threshold_value = 30
+    previous_threshold_value = 0
     msg = ''
 
     print("To Disconnect Please Type !DISCONNECT")
@@ -51,7 +53,10 @@ def send():
 
                     if len(msg) >= threshold_value:
                         msg += '\n'
+                        previous_threshold_value = threshold_value
                         threshold_value += 30
+                    elif len(msg) < previous_threshold_value + 1 and threshold_value > 30:
+                        threshold_value -= 30
 
         if msg == "!DISCONNECT":
             message = "Client Disconnected".encode(FORMAT)
@@ -78,6 +83,17 @@ def send():
             screen.blit(new_surface[-1], (interface.inputRect.x + 10, interface.inputRect.y + 12))
             interface.inputRect.w = max(400, new_surface[-1].get_width() + 20)
 
+        new_received_surface = []
+        for message in received_message:
+            lines = message.split('\n')
+            for line in lines:
+                text_surface = base_font.render(line, True, (0, 0, 0))
+                new_received_surface.append(text_surface)
+
+        new_received_surface = new_received_surface[-12:] ## Ensure that the list contains at most 12 elements
+        for line in range(len(new_received_surface)):
+            screen.blit(new_received_surface[line],(interface.viewRect.x + 13, interface.viewRect.y * (line + 1.5)))
+
         pygame.display.flip()
         clock.tick(60)
     pygame.quit()
@@ -86,7 +102,7 @@ def receive_message(sock):
     while True:
         message = sock.recv(1024).decode()
         if not message: break
-        print(f"Received: {message}")
+        received_message.append(message)
 
 receive_thread = threading.Thread(target=receive_message, args=(CLIENT,))
 receive_thread.start()
