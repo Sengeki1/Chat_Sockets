@@ -26,7 +26,7 @@ FORMAT = 'utf-8'
 
 clients = {}
 ```
-*```addr``` Address, a tuple which arguments are the server and the port that we gonna bind to the socket
+* ```addr``` Address, a tuple which arguments are the server and the port that we gonna bind to the socket
 * Every time we send a message we need to encode that (in UTF form).
 
 ### Indicating Specific Connection
@@ -67,7 +67,7 @@ This function will handle the individual connection between the client and the s
 print(f"[{address}] {msg}")
 ```
 
-### Sending Message to the other Clients
+### Sending Message Logic
 
 For every client in our server excluding the connected client that sent a message, after receiving that message in the server we send that message back to all of the clients excluding the one that is connected or sended the message.
 
@@ -82,9 +82,28 @@ for the same client that established the connection or sended a message we send 
   connection.send("Message was Sent!".encode(FORMAT))
 ```
 
-if we receive a message  ```Client Disconnected``` we automatically exit our connection and delete that same connection from the clients buffer which stores the clients connected with the server.
+if we receive a message  ```Client Disconnected``` we automatically exit our connection and delete that same connection from the clients buffer which stores the clients connected within the server.
 ```py
   connection.close()
   del clients[connection]
 ```
   
+### Start Server 
+
+```py
+  SERVER.listen() # listen for connection
+  print(f"[LISTENING] Server is listening on {server}")
+  (code...)
+```
+Listening for connections, and then passing those connections to ```handle client``` which will run in a new thread.
+```py
+  while True:
+  connection, address = SERVER.accept() # when a new connection occours it stores the data in these two variables (blocking line of code)
+  clients[connection] = address
+  thread = threading.Thread(target=handle_client, args=(connection, address))
+  thread.start()
+```
+```py
+  print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+```
+Print active connections, just so we can see that. Always one connection running, so do - 1 to show connections minus the one running.
