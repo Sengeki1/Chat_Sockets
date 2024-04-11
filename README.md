@@ -1,6 +1,6 @@
 # Multi-Threading and Python Sockets with Pygame
 
-This is an example of socket programming that is able to connect multiple clients to a server using python sockets. It can send messages from clients to server, and server to clients.
+This is an example of socket programming that is able to connect multiple clients to a server using python sockets. It can send messages from clients to server, and server to clients using Pygame library for user interface.
 
 ## Server.py
 
@@ -107,3 +107,46 @@ Listening for connections, and then passing those connections to ```handle clien
   print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 ```
 Print active connections, just so we can see that. Always one connection running, so do - 1 to show connections minus the one running.
+
+
+## Client.py
+
+We initialize pygame and set the height and width of the display screen then we created a font and a clock object 
+```py
+  pygame.init()
+  screen = pygame.display.set_mode((800, 600))
+  base_font = pygame.font.Font(None, 32)
+  clock = pygame.time.Clock()
+```
+
+We Instantiate afterwards the class interface so we have the propreties of that specific class to draw the boxes on the screen.
+
+```py
+  client.connect(ADDR)
+```
+Officially connecting to the server.
+
+### Send Message Function
+
+If we quit the program we set the message as  ```!DISCONNECT``` which will be used to disconnect from the server and if the event type is of type ```KEYDOWN```(if we press a button) and if that button is of type ```K_BACKSPACE```(delete button) we delete the previous inserted letter. If the event key pressed is of type ```RETURN```(enter):
+```py
+  message = msg.encode(FORMAT)  # encode the string into bytes to be sent to the sockets
+
+  msg_length = len(message)
+  send_length = str(msg_length).encode(FORMAT)
+  send_length += b' ' * (header - len(send_length))
+
+  CLIENT.send(send_length)
+  CLIENT.send(message)
+
+  msg = ''
+```
+we set ```msg = ''``` so that when we send the message to the server we reset that message to an empty string.
+* Encoding the message from a string into bytes so that we can actually send it through the socket.
+
+* Then follow protocol where length of the first message we send is the length of the message that is about to come.
+
+* ```send_length = str(msg_length).encode(FORMAT))``` Length of first message that we send, representing the length of (message) ... which is the message we actually want to send.
+
+* ```send_length += b' ' * (HEADER - len(send_length))``` We need to make sure it is 64 bytes long. We don't know it is going to be 64 and doesn't mean it is 64. So take ```msg_length``` , and subtract from 64 to get the length, so we know how much to Pad it so that it is 64.
+
