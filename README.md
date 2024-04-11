@@ -9,7 +9,7 @@ This is an example of socket programming that is able to connect multiple client
 ```py
   header = 64
 ```
-First message length to server needs to always be of length 64 (bytes). Represents length of message about to come. We read that, get the number, then our program expects to receive the size of the message that is incoming.
+First message length sent to server needs to always be of length 64 (bytes). Represents length of message about to come. We read that, get the number, then our program expects to receive the size of the message that is incoming.
 
 ```py
   SERVER = "192.10.0.100"
