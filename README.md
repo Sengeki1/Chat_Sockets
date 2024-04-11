@@ -150,3 +150,67 @@ we set ```msg = ''``` so that when we send the message to the server we reset th
 
 * ```send_length += b' ' * (HEADER - len(send_length))``` We need to make sure it is 64 bytes long. We don't know it is going to be 64 and doesn't mean it is 64. So take ```msg_length``` , and subtract from 64 to get the length, so we know how much to Pad it so that it is 64.
 
+Lastely if the event is neither we insert text into msg variable using event.unicode which allows to type in pygame
+```py
+  msg += event.unicode
+```
+
+For the UI we created an if statement that doesn't allow the text to be displayed on a single line after a certain threshold for display issues. That the text doesn't surpass the input box width.
+```py
+if len(msg) >= threshold_value:
+  msg += '\n'
+  previous_threshold_value = threshold_value
+  threshold_value += 30
+  elif len(msg) < previous_threshold_value + 1 and threshold_value > 30:
+  threshold_value -= 30
+```
+
+To display the text on the screen we first check if the msg contains any ```\n```caracter if not the string stays the same and split method returns a list which will be a list for all the phrases typed on the input box. After createing a text_surface and appending it into a new list we render every sentence of that list using blit function that allows us to specify where we want to render it which in our case its in our input box. And we always render the last newly created line, this is to explain the usage of new_surface[-1]
+
+```py
+# on input box, text logic
+text_split = msg.split('\n')
+new_surface = []
+for sentence in text_split:
+  text_surface = base_font.render(sentence, True, (0, 0, 0))
+  new_surface.append(text_surface)
+
+for line in range(len(new_surface)):
+  screen.blit(new_surface[-1], (interface.inputRect.x + 10, interface.inputRect.y + 12))
+  interface.inputRect.w = max(400, new_surface[-1].get_width() + 20)
+```
+
+Following that same logic now we render the received message from the server
+```py
+# on view box, received message logic
+new_received_surface = []
+for message in received_message:
+  lines = message.split('\n')
+  for line in lines:
+    if line == "Message was Sent!":
+      text_surface = base_font.render(line, True, (255, 0, 0))
+    else:
+      text_surface = base_font.render(line, True, (0, 0, 0))
+      new_received_surface.append(text_surface)
+
+new_received_surface = new_received_surface[-12:] ## Ensure that the list contains at most 12 elements
+for line in range(len(new_received_surface)):
+  screen.blit(new_received_surface[line],(interface.viewRect.x + 13, interface.viewRect.y * (line + 1.5))) # line + 15 is an offset
+```
+
+Lastely we update our program using flip method on 60 frames p/second. If exited from the while loop pygame quits.
+
+### Receive Message
+
+To ensure we keep track of a received message we create a separate thread that runs the function ```receive_message``` instead of running in a single thread which would cause error in our program.
+
+```py
+def receive_message(sock):
+    while True:
+        message = sock.recv(1024).decode()
+        if not message: break
+        received_message.append(message)
+
+receive_thread = threading.Thread(target=receive_message, args=(CLIENT,))
+receive_thread.start()
+```
