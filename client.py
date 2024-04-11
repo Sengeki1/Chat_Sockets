@@ -47,6 +47,7 @@ def send():
 
                     msg = ''
                 else:
+                    # on input
                     msg += event.unicode
 
                     if len(msg) >= threshold_value:
@@ -68,9 +69,10 @@ def send():
 
             msg = ''
 
-        screen.fill((0, 0, 0))
+        screen.fill((0, 0, 0)) # reset screen
         interface.draw()
 
+        # on input box, text logic
         text_split = msg.split('\n')
         new_surface = []
         for sentence in text_split:
@@ -81,6 +83,7 @@ def send():
             screen.blit(new_surface[-1], (interface.inputRect.x + 10, interface.inputRect.y + 12))
             interface.inputRect.w = max(400, new_surface[-1].get_width() + 20)
 
+        # on view box, received message logic
         new_received_surface = []
         for message in received_message:
             lines = message.split('\n')
@@ -97,6 +100,7 @@ def send():
 
         pygame.display.flip()
         clock.tick(60)
+
     pygame.quit()
 
 def receive_message(sock):
