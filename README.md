@@ -150,7 +150,7 @@ we set ```msg = ''``` so that when we send the message to the server we reset th
 
 * ```send_length += b' ' * (HEADER - len(send_length))``` We need to make sure it is 64 bytes long. We don't know it is going to be 64 and doesn't mean it is 64. So take ```msg_length``` , and subtract from 64 to get the length, so we know how much to Pad it so that it is 64.
 
-Lastely if the event is neither we insert text into msg variable using event.unicode which allows to type in pygame
+Lastely if the event is neither, we insert text into msg variable using event.unicode which allows to type in pygame
 ```py
   msg += event.unicode
 ```
@@ -165,7 +165,7 @@ if len(msg) >= threshold_value:
   threshold_value -= 30
 ```
 
-To display the text on the screen we first check if the msg contains any ```\n```caracter if not the string stays the same and split method returns a list which will be a list for all the phrases typed on the input box. After createing a text_surface and appending it into a new list we render every sentence of that list using blit function that allows us to specify where we want to render it which in our case its in our input box. And we always render the last newly created line, this is to explain the usage of new_surface[-1]
+* To display the text on the screen we first check if the msg contains any ```\n``` caracter, if not the string stays the same and ```split()``` method returns a list which will be a list for all the phrases typed on the input box. After creating a text_surface and appending it into a new list, we render every sentence of that list using blit function that allows us to specify where we want to render it which in our case its in our input box. And we always render the last newly created line, this is to explain the usage of new_surface[-1]
 
 ```py
 # on input box, text logic
@@ -198,7 +198,7 @@ for line in range(len(new_received_surface)):
   screen.blit(new_received_surface[line],(interface.viewRect.x + 13, interface.viewRect.y * (line + 1.5))) # line + 15 is an offset
 ```
 
-Lastely we update our program using flip method on 60 frames p/second. If exited from the while loop pygame quits.
+Lastely we update our program using ```flip()``` method on 60 frames p/second. If exited from the while loop, pygame exits.
 
 ### Receive Message
 
