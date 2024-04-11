@@ -161,7 +161,7 @@ if len(msg) >= threshold_value:
   msg += '\n'
   previous_threshold_value = threshold_value
   threshold_value += 30
-  elif len(msg) < previous_threshold_value + 1 and threshold_value > 30:
+elif len(msg) < previous_threshold_value + 1 and threshold_value > 30:
   threshold_value -= 30
 ```
 
